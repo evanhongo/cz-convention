@@ -1,3 +1,9 @@
+## v2.0.1 (2024-10-20)
+
+### Fix
+
+- docs typo [ed72d](https://github.com/evanhongo/cz-github-convention/commit/commit/ed72dddbc0b4f421befe2e594ad00a781927554a) [evanhongo](evanhongo@gmail.com)
+
 ## v2.0.0 (2024-10-20)
 
 ### BREAKING CHANGE
