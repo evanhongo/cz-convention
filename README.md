@@ -1,34 +1,37 @@
-# What is it
-## **cz-github-convention** is a plugin for [commitizen](https://github.com/commitizen-tools/commitizen)
+# Intro
 
----
+## What is it
 
-# What it do
+**cz-github-convention** is a plugin for [commitizen](https://github.com/commitizen-tools/commitizen)
 
-- ## Create links to GitHub commits in the CHANGELOG.md
+## What it do
 
----
+Create links to commits & author info in the CHANGELOG.md
 
-# Installation
+## Installation
 
 ```sh
-pip install cz-github-convention
+pip install cz-convention
 cz init
 ```
 
-## cz.json
+## Config sample
+
+cz.json
+
 ```json
 {
   "commitizen": {
     "name": "cz_github_convention",
     "version": "0.0.1",
     "tag_format": "v$version",
-    "github_repo": "superman/super-project"
+    "git_provider": "github",
+    "repo_url": "https://github.com/superman/super-project"
   }
 }
 ```
 
-## .pre-commit-config.yaml
+.pre-commit-config.yaml
 
 ```yaml
 repos:
@@ -37,5 +40,5 @@ repos:
     hooks:
       - id: commitizen
         stages: [commit-msg]
-        additional_dependencies: [cz-github-convention]
+        additional_dependencies: [cz-convention]
 ```

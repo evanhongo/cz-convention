@@ -1,11 +1,12 @@
 import re
-from commitizen import git, config, defaults
-from commitizen.defaults import  Questions
+from commitizen import git, config
+from commitizen.defaults import Questions
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
 from commitizen.cz.exceptions import CzException
 
-__all__ = ["GithubConventionPluginCz"]
+__all__ = ["ConventionPluginCz"]
+
 
 def parse_scope(text):
     if not text:
@@ -25,26 +26,16 @@ def parse_subject(text):
     return required_validator(text, msg="Subject is required.")
 
 
-class GithubConventionPluginCz(BaseCommitizen):
-    # Read the config file and check if required settings are available
-    conf = config.read_cfg()
-
-    if "github_repo" not in conf.settings:
-        print("Please add the key github_repo to your .cz.yaml|json|toml config file.")
-        quit()
-
-    github_repo = conf.settings["github_repo"]
-    
-    
-    bump_pattern = r"^(break|feat|fix|refactor|perf)" 
+class ConventionPluginCz(BaseCommitizen):
+    bump_pattern = r"^(break|feat|fix|refactor|perf)"
     bump_map = {
-        "break": "MAJOR", 
-        "feat": "MINOR", 
-        "fix": "PATCH", 
-        "refactor": "PATCH", 
-        "perf": "PATCH"
+        "break": "MAJOR",
+        "feat": "MINOR",
+        "fix": "PATCH",
+        "refactor": "PATCH",
+        "perf": "PATCH",
     }
-    
+
     changelog_pattern = r"^(break|feat|fix|refactor|perf)"
     change_type_map = {
         "break": "BREAKING CHANGE",
@@ -54,9 +45,9 @@ class GithubConventionPluginCz(BaseCommitizen):
         "perf": "Performance",
     }
     change_type_order = ["break", "feat", "fix", "refactor", "perf"]
-    
+
     commit_parser = r"^((?P<change_type>break|feat|fix|refactor|perf)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"
-    
+
     def questions(self) -> Questions:
         questions = [
             {
@@ -76,7 +67,6 @@ class GithubConventionPluginCz(BaseCommitizen):
                         "value": "fix",
                         "name": "🐛 fix: A bug fix. Correlates with PATCH in SemVer",
                     },
-
                     {
                         "value": "refactor",
                         "name": (
@@ -86,7 +76,7 @@ class GithubConventionPluginCz(BaseCommitizen):
                     },
                     {
                         "value": "perf",
-                        "name": "🚀 perf: A code change that improves performance"
+                        "name": "🚀 perf: A code change that improves performance",
                     },
                     {
                         "value": "test",
@@ -94,9 +84,7 @@ class GithubConventionPluginCz(BaseCommitizen):
                             "🚦 test: Adding missing or correcting " "existing tests"
                         ),
                     },
-                    {   "value": "docs", 
-                        "name": "📜 docs: Documentation only changes"
-                    },
+                    {"value": "docs", "name": "📜 docs: Documentation only changes"},
                     {
                         "value": "style",
                         "name": (
@@ -170,7 +158,7 @@ class GithubConventionPluginCz(BaseCommitizen):
         scope = answers["scope"]
         subject = answers["subject"]
         body = answers["body"]
-        footer = answers["footer"]        
+        footer = answers["footer"]
         if scope:
             scope = f"({scope})"
         if body:
@@ -188,11 +176,7 @@ class GithubConventionPluginCz(BaseCommitizen):
         )
 
     def schema(self) -> str:
-        return (
-            "<type>(<scope>): <subject>\n"
-            "<body>\n"
-            "<footer>"
-        )
+        return "<type>(<scope>): <subject>\n" "<body>\n" "<footer>"
 
     def schema_pattern(self) -> str:
         PATTERN = (
@@ -208,17 +192,35 @@ class GithubConventionPluginCz(BaseCommitizen):
             return ""
         return m.group(3).strip()
 
+    def get_commit_baseurl(self) -> str:
+        conf = config.read_cfg()
+
+        if "git_provider" not in conf.settings or "repo_url" not in conf.settings:
+            print(
+                "Please add the key `git_provider` & `repo_url` to your .cz.yaml|json|toml config file."
+            )
+            quit()
+
+        git_provider = conf.settings["git_provider"]
+        if git_provider not in ["github", "gitlab"]:
+            print("Supported git provider: `github` & `gitlab`")
+            quit()
+
+        repo_url = conf.settings["repo_url"]
+
+        if git_provider == "github":
+            return f"{repo_url}/commit"
+        if git_provider == "gitlab":
+            return f"{repo_url}/-/commit"
+
     def changelog_message_builder_hook(
         self, parsed_message: dict, commit: git.GitCommit
     ) -> dict:
-        """add github link to the readme"""
-        rev = commit.rev
-        m = parsed_message["message"]
-        parsed_message[
-            "message"
-        ] = f"{m} [{rev[:5]}](https://github.com/{self.github_repo}/commit/{commit.rev})"
+        # Add commit link to the CHANGELOG
+        parsed_message["message"] = (
+            f"{parsed_message["message"]} [{commit.rev[:5]}]({self.get_commit_baseurl()}/commit/{commit.rev}) [{commit.author}]({commit.author_email})"
+        )
         return parsed_message
 
 
-class InvalidAnswerError(CzException):
-    ...
+class InvalidAnswerError(CzException): ...

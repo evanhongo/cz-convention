@@ -8,18 +8,18 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name="cz_github_convention",
-    version="1.0.0",
-    py_modules=["cz_github_convention"],
+    name="cz_convention",
+    version="2.0.0",
+    py_modules=["cz_convention"],
     entry_points={
-        "commitizen.plugin": ["cz_github_convention = cz_github_convention:GithubConventionPluginCz"]
+        "commitizen.plugin": ["cz_convention = cz_convention:ConventionPluginCz"]
     },
     author="evanhongo",
     author_email="evanhongo@gmail.com",
     license="MIT",
-    url="https://github.com/evanhongo/cz-github-convention",
+    url="https://github.com/evanhongo/cz-convention",
     install_requires=["commitizen"],
-    description="Extend the commitizen tools to create conventional commits and README that link to GitHub.",
+    description="Extend the commitizen tools to create conventional commits and CHANGELOG that link to git providers.",
     long_description=long_description,
     long_description_content_type="text/markdown",
 )

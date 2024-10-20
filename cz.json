@@ -1,9 +1,10 @@
 {
-  "commitizen": {
-    "name": "cz_github_convention",
-    "version": "1.0.0",
-    "tag_format": "v$version",
-    "github_repo": "evanhongo/cz-github-convention",
-    "update_changelog_on_bump": true
-  }
+	"commitizen": {
+		"name": "cz_convention",
+		"version": "1.0.0",
+		"tag_format": "v$version",
+		"git_provider": "github",
+		"repo_url": "https://github.com/evanhongo/cz-github-convention",
+		"update_changelog_on_bump": true
+	}
 }
