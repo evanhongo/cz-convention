@@ -2,7 +2,7 @@
 
 ## What is it
 
-**cz-github-convention** is a plugin for [commitizen](https://github.com/commitizen-tools/commitizen)
+**cz-convention** is a plugin for [commitizen](https://github.com/commitizen-tools/commitizen)
 
 ## What it do
 
@@ -22,7 +22,7 @@ cz.json
 ```json
 {
   "commitizen": {
-    "name": "cz_github_convention",
+    "name": "cz_convention",
     "version": "0.0.1",
     "tag_format": "v$version",
     "git_provider": "github",
