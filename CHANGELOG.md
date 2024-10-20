@@ -1,3 +1,10 @@
+## v2.0.0 (2024-10-20)
+
+### BREAKING CHANGE
+
+- extract logic related to git providers [4b10a](https://github.com/evanhongo/cz-github-convention/commit/commit/4b10a4950edba3e523f79ee507e18190f4b84d11) [evanhongo](evanhongo@gmail.com)
+- **cz_github_convention.py**: migrate to new plugin format (commitizen 3.0.0) [cad25](https://github.com/evanhongo/cz-github-convention/commit/commit/cad2566da8144d89b8aa96fccad4cf22165f15cf) [evanhongo](evanhongo@gmail.com)
+
 ## v1.0.0 (2024-01-03)
 
 ### BREAKING CHANGE
